@@ -1,0 +1,573 @@
+# Heart--Failure
+rm(list = ls())
+hf_data <- read.csv("heart_failure_clinical_records_dataset.csv")
+
+##data understanding
+head(hf_data)
+dim(hf_data)
+#check type of variable
+str(hf_data)
+#numerical variables
+#age
+#install.packages("hrbrthemes")
+quantile(hf_data1$age)
+summary(hf_data1$age)
+var(hf_data1$age)
+sum(hf_data1$age>=65)
+sum(hf_data1$age<65)
+sum(hf_data1$age>60 & hf_data1$age<65)
+#histgrame
+hist(hf_data$age1,freq = FALSE)
+library(ggplot2)
+library(hrbrthemes)
+np1<-ggplot(hf_data1, aes(x=age)) + geom_histogram(binwidth=5, colour="#e9ecef",alpha=0.6) + 
+  labs(x="Age",y="Ferquency") +theme_minimal(base_size =8)+theme(axis.title = element_text(size = 10))
+
+#creatinine_phosphokinase: 
+summary(hf_data1$creatinine_phosphokinase)
+var(hf_data1$creatinine_phosphokinase)
+np2<-ggplot(hf_data1, aes(x=creatinine_phosphokinase)) + geom_histogram(binwidth=100, colour="#e9ecef",alpha=0.6) + 
+  labs(x="CPK",y="Ferquency")+theme_minimal(base_size =8)+theme(axis.title = element_text(size = 10))
+
+sum(hf_data1$creatinine_phosphokinase>10 & hf_data1$creatinine_phosphokinase<120)
+
+#ejection_fraction:
+summary(hf_data1$ejection_fraction)
+var(hf_data1$ejection_fraction)
+np3<-ggplot(hf_data1, aes(x=ejection_fraction)) + geom_histogram(binwidth=5, colour="#e9ecef", alpha=0.6) + 
+  labs(x="Ejection fraction",y="Ferquency")+theme_minimal(base_size =8)+theme(axis.title = element_text(size = 10))
+
+sum(hf_data1$ejection_fraction>40 & hf_data1$ejection_fraction<75)
+sum(hf_data1$ejection_fraction<30)
+
+#platelets:
+hist(hf_data$platelets)
+summary(hf_data1$platelets)
+var(hf_data1$platelets)
+np4<-ggplot(hf_data1, aes(x=platelets)) + geom_histogram(binwidth=10000, colour="#e9ecef", alpha=0.6) + 
+  labs(x="Platelets",y="Ferquency")+theme_minimal(base_size =8)+theme(axis.title = element_text(size = 10))
+sum(hf_data1$platelets>150000 & hf_data1$platelets<450000)
+sum(hf_data1$platelets>260000 & hf_data1$platelets<270000)
+
+#serum_creatinine:
+summary(hf_data1$serum_creatinine)
+var(hf_data1$serum_creatinine)
+np5<-ggplot(hf_data1, aes(x=serum_creatinine)) + geom_histogram(binwidth=0.2, colour="#e9ecef", alpha=0.6) + 
+  labs(x="Serum creatinine",y="Ferquency") +theme_minimal(base_size =8)+theme(axis.title = element_text(size = 10))
+sum(hf_data1$serum_creatinine>0.5 & hf_data1$serum_creatinine<1.2)
+173/299
+#serum sodium: 
+summary(hf_data1$serum_sodium)
+var(hf_data1$serum_sodium)
+np6<-ggplot(hf_data1, aes(x=serum_sodium)) + geom_histogram(binwidth=1, colour="#e9ecef", alpha=0.6) + 
+  labs(x="Serum sodium",y="Ferquency") +theme_minimal(base_size =8)+theme(axis.title = element_text(size = 10))
+sum(hf_data$serum_sodium>135 & hf_data$serum_sodium<145)
+#time
+summary(hf_data1$time)
+var(hf_data1$time)
+ggplot(hf_data1, aes(x=time)) + geom_histogram( colour="#e9ecef", alpha=0.6) + 
+  labs(x="Time",y="Ferquency") + ggtitle("The Histogram of Time") +
+  theme_bw() +
+  theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"))
+
+sum(hf_data1$time>199 & hf_data1$time<211)
+sum(hf_data1$time>210 & hf_data1$time<220)
+np7<-ggplot(data=hf_data1,aes(time))+geom_histogram(binwidth=10, colour="#e9ecef", alpha=0.6)+facet_grid(DEATH_EVENT ~ .)+
+  labs(x="Time",y="Ferquency")+theme(axis.title = element_text(size = 10))
+
+plot_grid(np1, np2, np3, np4, np5, np6, ncol = 3)
+
+
+##Categorical variable
+data1 <- hf_data
+data1$anaemia<-as.factor(data1$anaemia)
+data1$diabetes <-as.factor(data1$diabetes)
+data1$high_blood_pressure <- as.factor(data1$high_blood_pressure)
+data1$sex <- as.factor(data1$sex)
+data1$smoking <- as.factor(data1$smoking)
+data1$DEATH_EVENT <-as.factor(data1$DEATH_EVENT)
+summary(data1)
+#cover
+library(plyr)#rename factor
+data1$anaemia <- revalue(data1$anaemia, c("0" = "No", "1" = "Yes"))
+data1$diabetes <- revalue(data1$diabetes, c("0" = "No", "1" = "Yes"))
+data1$high_blood_pressure <- revalue(data1$high_blood_pressure, c("0" = "No", "1" = "Yes"))
+data1$sex <- revalue(data1$sex,c("0" = "Female", "1" = "male"))
+data1$smoking <- revalue(data1$smoking, c("0" = "No", "1" = "Yes"))
+
+
+#anaemia：
+summary(data1$anaemia)
+ggplot(data1, aes(x=anaemia))+geom_bar(fill="lightblue",alpha = 0.6, width = 0.7) + ggtitle("The Distribution of Anaemia") +
+  theme_bw() + theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"))
+#+geom_text(aes(label=count))
+sum(data1$anaemia == "1" & data1$sex == "1")
+sum(data1$anaemia == "1" & data1$DEATH_EVENT == "1")
+
+#group barplot
+ggplot(data1,aes(DEATH_EVENT))+geom_bar(aes(fill=anaemia),width = 0.7,position = 'fill')+coord_flip() 
+ggplot(data1,aes(anaemia))+geom_bar(aes(fill=DEATH_EVENT),width = 0.7)+
+  theme(legend.position=c(0.75,0.90))+theme(legend.text=element_text(size=8))
+
+#diabetes:糖尿病
+summary(data1$diabetes)
+ggplot(data1, aes(x=diabetes))+geom_bar(fill="lightblue",alpha = 0.6, width = 0.7) + ggtitle("The Distribution of Diabetes") +
+  theme_bw() + theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"))
+sum(data1$diabetes == 1 & hf_data$DEATH_EVENT == 1)
+sum(data1$diabetes == 0 & hf_data$DEATH_EVENT == 1)
+
+#high blood pressure
+summary(data1$high_blood_pressure)
+ggplot(data1, aes(x=high_blood_pressure))+geom_bar(fill="lightblue",alpha = 0.6, width = 0.7) + ggtitle("The Distribution of high_blood_pressure") +
+  theme_bw() + theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"))
+sum(data1$high_blood_pressure == 1 & hf_data$DEATH_EVENT == 1)
+sum(data1$high_blood_pressure == 0 & hf_data$DEATH_EVENT == 1)
+
+#sex
+summary(data1$sex)
+ggplot(data1, aes(x=sex))+geom_bar(fill="lightblue",alpha = 0.6, width = 0.7) + ggtitle("The Distribution of Sex") +
+  theme_bw() + theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"))
+sum(data1$sex == 1 & hf_data$DEATH_EVENT == 1)
+sum(data1$sex == 0 & hf_data$DEATH_EVENT == 1)
+
+#smoking
+summary(data1$smoking)
+ggplot(data1, aes(x=smoking))+geom_bar(fill="lightblue",alpha = 0.6, width = 0.5) + ggtitle("The Distribution of Smoking") +
+  theme_bw() + theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"))
+sum(hf_data1$smoking == 1 & data1$DEATH_EVENT == 1)
+sum(hf_data$smoking == 0 & hf_data$DEATH_EVENT == 1)
+
+#deathevent
+data1$DEATH_EVENT <-as.factor(data1$DEATH_EVENT)
+summary(data1$DEATH_EVENT)
+ggplot(data1, aes(x=DEATH_EVENT))+geom_bar(fill="lightblue",alpha = 0.6, width = 0.5) + ggtitle("The Distribution of DEATH_EVENT") +
+  theme_classic() + theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"))
+
+##data quality
+#missing data
+sum(!complete.cases(hf_data))
+library("VIM")
+aggr(hf_data, numbers=T, prop=FALSE)
+
+library(mice)
+md.pattern(hf_data, rotate.names = TRUE) 
+#outliers
+par(mfrow = c(2, 3))
+boxplot(hf_data$age ~ hf_data$DEATH_EVENT)
+boxplot(hf_data$creatinine_phosphokinase ~ hf_data$DEATH_EVENT)
+boxplot(hf_data$ejection_fraction ~ hf_data$DEATH_EVENT)
+boxplot(hf_data$platelets ~ hf_data$DEATH_EVENT)
+boxplot(hf_data$serum_sodium ~ hf_data$DEATH_EVENT)
+boxplot(hf_data$serum_creatinine ~ hf_data$DEATH_EVENT)
+
+par(mfrow = c(2, 3))
+boxplot(hf_data$age, main = "Boxplot of age" )
+boxplot(hf_data$creatinine_phosphokinase, main = "Boxplot of CPK")$out
+boxplot(hf_data$ejection_fraction,main = "Boxplot of ejection fraction")$out
+boxplot(hf_data$platelets,main = "Boxplot of platelets")$out
+boxplot(hf_data$serum_sodium,main = "Boxplot of serum sodium")$out
+boxplot(hf_data$serum_creatinine,main = "Boxplot of serum creatinine")$out
+
+#feature selection
+#normaliza data
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+new_data1 <- as.data.frame(lapply(hf_data1[1:13], normalize))
+#Splitting data
+set.seed(1235)
+smp_size <- floor(0.8 * nrow(new_data1))
+set.seed(12345)
+train_ind <- sample(nrow(new_data1), smp_size)
+train <- new_data1[train_ind, ]
+test <- new_data1[-train_ind, ]
+
+#1.chi aquared
+
+chisq.test(hf_data1$age,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$anaemia,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$creatinine_phosphokinase,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$diabetes,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$ejection_fraction,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$high_blood_pressure,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$platelets,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$serum_creatinine,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$serum_sodium,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$sex,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$smoking,hf_data1$DEATH_EVENT)
+chisq.test(hf_data1$time,hf_data1$DEATH_EVENT)
+
+#2.glm
+library(caret)
+glm_model <- train(DEATH_EVENT ~ . ,data=train, method="glm")
+impt_vars <- varImp(glm_model)
+print(impt_vars) 
+plot(impt_vars, main='Variable Importance')
+
+glm_model<-glm(DEATH_EVENT~. ,data=train,family = "binomial")
+imp<-(varImp(glm_model))
+imp <- data.frame(imp)
+imp$name<-rownames(imp) 
+glm.imp<-imp[order(imp$Overall,decreasing = TRUE),]
+library(dplyr)
+library(forcats)
+#plot of importance
+glm.imp %>%
+  mutate(name = fct_reorder(name, Overall)) %>%
+  ggplot(aes(x=name, y=Overall)) +
+  geom_bar(stat="identity", fill="#f68060", alpha=.6, width=.5) +
+  coord_flip() +
+  xlab("") + ylab("Variable Importance")+
+  theme_bw() + 
+  ggtitle("Feature ranking by logistic regression") +
+  theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"), axis.text = element_text(face = "bold"))
+
+theme(plot.title = element_text(size=10,hjust = 0.5, face = "bold"), axis.text = element_text(size = 10,face = "bold"))
+model2<-step(object = glm_model,trace = 0)
+summary(glm_model)
+
+#3.Randam forest
+library(randomForest)
+rfmodel <- randomForest(factor(DEATH_EVENT)~ ., data=train, importance=TRUE)
+summary(rfmodel)
+imp <- data.frame(importance(rfmodel))
+imp
+rf.imp<-imp[order(imp$MeanDecreaseGini,decreasing = TRUE),]
+rf.imp$name<-rownames(rf.imp)
+imp1<-rf.imp %>%
+  mutate(name = fct_reorder(name, MeanDecreaseGini)) %>%
+  ggplot(aes(x=name, y=MeanDecreaseGini)) +
+  geom_bar(stat="identity", fill="lightblue", alpha=.8, width=.5) +
+  coord_flip() +
+  xlab("") + ylab("MeanDecreaseGini")+
+  theme_bw() + 
+  ggtitle("Feature ranking by random forest") +
+  theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"),axis.text = element_text(size = 9.5, face = "bold"))
+
+rf.imp<-imp[order(imp$MeanDecreaseAccuracy,decreasing = TRUE),]
+rf.imp$name<-rownames(rf.imp)
+imp2<-rf.imp %>%
+  mutate(name = fct_reorder(name, MeanDecreaseAccuracy)) %>%
+  ggplot(aes(x=name, y=MeanDecreaseAccuracy)) +
+  geom_bar(stat="identity", fill="lightblue", alpha=.8, width=.5) +
+  coord_flip() +
+  xlab("") + ylab("MeanDecreaseAccuracy")+
+  theme_bw() + 
+  ggtitle("Feature ranking by random forest") +
+  theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"),axis.text = element_text(size = 9.5, face = "bold"))
+
+plot_grid(imp1, imp2, align = "h")
+
+theme(plot.title = element_text(size=12,hjust = 0.5, face = "bold"),axis.text = element_text(size = 9.5))
+
+varImpPlot(rfmodel)
+
+#3.Mann Whitney U
+wilcox.test(age ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(anaemia ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(creatinine_phosphokinase ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(diabetes ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(ejection_fraction ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(high_blood_pressure ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(platelets ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(serum_creatinine ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(serum_sodium ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(smoking ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(sex ~ DEATH_EVENT,hf_data1,paired = FALSE)
+wilcox.test(time ~ DEATH_EVENT,hf_data1,paired = FALSE)
+?wilcox.test
+
+
+#5.Cross-validation
+formulas = c("DEATH_EVENT ~ time",
+             "DEATH_EVENT ~ time + ejection_fraction",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium +creatinine_phosphokinase",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium +high_blood_pressure +creatinine_phosphokinase",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium +high_blood_pressure +anaemia+creatinine_phosphokinase",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium +high_blood_pressure +anaemia+creatinine_phosphokinase + platelets",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium +high_blood_pressure +anaemia+creatinine_phosphokinase + platelets+smoking",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium +high_blood_pressure +anaemia+creatinine_phosphokinase + platelets+smoking+sex",
+             "DEATH_EVENT ~ time + ejection_fraction + serum_creatinine + age+ serum_sodium +high_blood_pressure +anaemia+creatinine_phosphokinase + platelets+smoking+sex+diabetes")
+
+hf_data1$DEATH_EVENT <- factor(hf_data1$DEATH_EVENT)
+set.seed(1235)
+folds <- createFolds(y =hf_data1$DEATH_EVENT, k = 10) 
+re <- c()
+
+formulatype <- c()
+for (ii in 1:12) {
+  accuracy <- c()
+  for (i in 1:10) {
+    traindatacv <- hf_data1[-folds[[i]], ]
+    testdatacv <- hf_data1[folds[[i]], ]
+    rf <- randomForest(as.formula(formulas[ii]), data = traindatacv) #importance = TR pre <- predict(rf, testdatacv, type = "class")
+    pre <- predict(rf, testdatacv, type = "class")
+    accuracy = c(accuracy, sum(testdatacv$DEATH_EVENT == pre)/length(pre))
+  }
+  formulatype <- c(formulatype, formulas[ii])
+  re <- c(re, mean(accuracy))
+}
+cvresult <- data.frame(formulatype, re)
+cvresult<-cvresult[order(cvresult$re,decreasing = TRUE),]
+cvresult
+
+#modeling
+
+#logical regression
+#k-flod
+library(pROC)
+set.seed(123457)
+folds <- createFolds(new_data1$DEATH_EVENT, k = 10)
+accuracy_list<-as.numeric()
+sensitivity_list<-as.numeric()
+pecificity_list<-as.numeric()
+precision_list<-as.numeric()
+f1_list<-as.numeric()
+auc_list<- as.numeric()
+mcc_list<- as.numeric()
+for(i in 1:10){
+  
+  # for each fold, we conduct training and testing
+  
+  # use fold i for testing
+  fold_test <- new_data1[folds[[i]],]
+  # use the remaining 9 folds for training
+  fold_train <- new_data1[-folds[[i]],] 
+  
+  # #train and test model
+  m.glm <- glm(DEATH_EVENT ~ ., data=fold_train, family = "binomial")
+  pre.glm <- predict(m.glm, fold_test, type = "response")
+  
+  p.glm<- as.factor(ifelse(pre.glm>0.5,1,0))
+  fold_cm_glm <- confusionMatrix(p.glm, fold_test$DEATH_EVENT, positive = "1")
+
+  #evulate the model
+  fold_accuracy <- fold_cm_glm$overall['Accuracy']
+  fold_sensitivity <- fold_cm_glm$byClass['Sensitivity'] # is also called recall
+  fold_specificity <- fold_cm_glm$byClass['Specificity']
+  fold_precision <- fold_cm_glm$byClass['Precision'] # Precision is also called Positive Predictive Value (PPV)
+  fold_recall <- fold_cm_glm$byClass['Recall']
+  fold_f1 <- fold_cm_glm$byClass['F1']
+  fold_auc<-as.numeric(auc(fold_test$DEATH_EVENT,pre.glm))
+  fold_mcc<- mccr(fold_test$DEATH_EVENT, p.glm)
+  
+  # append the result to the accuracy list for each fold
+  accuracy_list<- append(accuracy_list,fold_accuracy)
+  sensitivity_list <- append(sensitivity_list,fold_sensitivity)
+  pecificity_list <- append(pecificity_list,fold_specificity)
+  precision_list <- append(precision_list,fold_precision)
+  f1_list <- append(f1_list,fold_f1)
+  auc_list <- append(auc_list,fold_auc)
+  mcc_list <- append(mcc_list,fold_mcc)
+}
+#accuracy_list
+# compute the average accuracy over 10 folds
+glm_accuracy <- mean(accuracy_list)
+glm_sensitivity <- mean(sensitivity_list)
+glm_pecificity <- mean(pecificity_list)
+glm_precision <- mean(precision_list)
+glm_f1 <- mean(f1_list)
+glm_auc<-mean(auc_list)
+glm_mcc<-mean(mcc_list)
+
+##k-nn
+library(class)
+# 10 fold
+library(pROC)
+set.seed(123457)
+folds <- createFolds(new_data1$DEATH_EVENT, k = 10)
+accuracy_list<-as.numeric()
+sensitivity_list<-as.numeric()
+pecificity_list<-as.numeric()
+precision_list<-as.numeric()
+f1_list<-as.numeric()
+auc_list<- as.numeric()
+mcc_list<- as.numeric()
+for(i in 1:10){
+  
+  # for each fold, we conduct training and testing
+  
+  # use fold i for testing
+  fold_test <- knn_data[folds[[i]], c(]
+  # use the remaining 9 folds for training
+  fold_train <- knn_data[-folds[[i]], ] 
+ 
+   knn_test_labels <- new_data1[folds[[i]],13]
+   knn_train_labels <- new_data1[-folds[[i]],13]
+  # #train and test model
+  kn_pre <- knn(fold_train, test = fold_test, cl = knn_train_labels, k=sqrt(299), prob = TRUE)
+  prob <- attr(kn_pre, "prob")
+  
+  fold_cm_knn <- confusionMatrix(kn_pre, knn_test_labels, positive = "1")
+  
+  #evulate the model
+  fold_accuracy <- fold_cm_knn$overall['Accuracy']
+  fold_sensitivity <- fold_cm_knn$byClass['Sensitivity'] # is also called recall
+  fold_specificity <- fold_cm_knn$byClass['Specificity']
+  fold_precision <- fold_cm_knn$byClass['Precision'] # Precision is also called Positive Predictive Value (PPV)
+  fold_recall <- fold_cm_knn$byClass['Recall']
+  fold_f1 <- fold_cm_knn$byClass['F1']
+  fold_auc<-auc(knn_test_labels,prob)
+  fold_mcc<- mccr(knn_test_labels, kn_pre)
+  
+  # append the result to the accuracy list for each fold
+  accuracy_list<- append(accuracy_list,fold_accuracy)
+  sensitivity_list <- append(sensitivity_list,fold_sensitivity)
+  pecificity_list <- append(pecificity_list,fold_specificity)
+  precision_list <- append(precision_list,fold_precision)
+  f1_list <- append(f1_list,fold_f1)
+  auc_list <- append(auc_list,fold_auc)
+  mcc_list <- append(mcc_list,fold_mcc)
+}
+#accuracy_list
+# compute the average accuracy over 10 folds
+knn_accuracy <- mean(accuracy_list)
+knn_sensitivity <- mean(sensitivity_list)
+knn_pecificity <- mean(pecificity_list)
+knn_precision <- mean(precision_list)
+knn_f1 <- mean(f1_list)
+knn_auc<-mean(auc_list)
+knn_mcc<-mean(auc_list)
+
+#data normaize
+normalize <- function(x) {
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+new_data1 <- as.data.frame(lapply(hf_data1[1:13], normalize))
+new_data1$DEATH_EVENT <- factor(new_data1$DEATH_EVENT)
+
+
+#random forest
+
+#k-fold
+library(pROC)
+set.seed(12345678)
+folds <- createFolds(new_data1$DEATH_EVENT, k = 10)
+accuracy_list<-as.numeric()
+sensitivity_list<-as.numeric()
+pecificity_list<-as.numeric()
+precision_list<-as.numeric()
+f1_list<-as.numeric()
+auc_list<- as.numeric()
+mcc_list<- as.numeric()
+for(i in 1:10){
+  
+  # for each fold, we conduct training and testing
+  
+  # use fold i for testing
+  fold_test <- new_data1[folds[[i]],]
+  # use the remaining 9 folds for training
+  fold_train <- new_data1[-folds[[i]],] 
+  
+  # #train and test model
+  m.rf1 <- randomForest(DEATH_EVENT ~ ., data=fold_train, ntre=20)
+  p.rf1 <- predict(m.rf1, fold_test, type = "class")
+  pre.rf<-predict(m.rf1, fold_test, type = "prob")
+  
+  fold_cm_rf <- confusionMatrix(p.rf1, fold_test$DEATH_EVENT, positive = "1")
+  
+  #evulate the model
+  fold_accuracy <- fold_cm_rf$overall['Accuracy']
+  fold_sensitivity <- fold_cm_rf$byClass['Sensitivity'] # is also called recall
+  fold_specificity <- fold_cm_rf$byClass['Specificity']
+  fold_precision <- fold_cm_rf$byClass['Precision'] # Precision is also called Positive Predictive Value (PPV)
+  fold_recall <- fold_cm_rf$byClass['Recall']
+  fold_f1 <- fold_cm_rf$byClass['F1']
+  fold_auc<-as.numeric(auc(fold_test$DEATH_EVENT,pre.rf[,2]))
+  flod_mcc<- mccr(fold_test$DEATH_EVENT, p.rf1)
+  
+  # append the result to the accuracy list for each fold
+  accuracy_list<- append(accuracy_list,fold_accuracy)
+  sensitivity_list <- append(sensitivity_list,fold_sensitivity)
+  pecificity_list <- append(pecificity_list,fold_specificity)
+  precision_list <- append(precision_list,fold_precision)
+  f1_list <- append(f1_list,fold_f1)
+  auc_list <- append(auc_list,fold_auc)
+  mcc_list <- append(mcc_list,fold_mcc)
+}
+#accuracy_list
+# compute the average accuracy over 10 folds
+rf_accuracy <- mean(accuracy_list)
+rf_sensitivity <- mean(sensitivity_list)
+rf_pecificity <- mean(pecificity_list)
+rf_precision <- mean(precision_list)
+rf_f1 <- mean(f1_list)
+rf_auc<-mean(auc_list)
+rf_mcc<-mean(mcc_list)
+
+
+#SVM
+#k-fold
+library(pROC)
+set.seed(1234578)
+folds <- createFolds(new_data1$DEATH_EVENT, k = 10)
+accuracy_list<-as.numeric()
+sensitivity_list<-as.numeric()
+pecificity_list<-as.numeric()
+precision_list<-as.numeric()
+f1_list<-as.numeric()
+auc_list<- as.numeric()
+mcc_list<- as.numeric()
+for(i in 1:10){
+  
+  # for each fold, we conduct training and testing
+  
+  # use fold i for testing
+  fold_test <- new_data1[folds[[i]],]
+  # use the remaining 9 folds for training
+  fold_train <- new_data1[-folds[[i]],] 
+  
+  # #train and test model
+  m.svm <- ksvm(DEATH_EVENT ~ ., data = fold_train, kernel = "rbfdot", prob.model=TRUE)
+  p.svm <- predict( m.svm, select(fold_test, -DEATH_EVENT))
+  pre.svm <- predict( m.svm, select(fold_test, -DEATH_EVENT),type="probabilities")
+  
+  fold_cm_svm <- confusionMatrix(p.svm, fold_test$DEATH_EVENT, positive = "1")
+  
+  #evulate the model
+  fold_accuracy <- fold_cm_svm$overall['Accuracy']
+  fold_sensitivity <- fold_cm_svm$byClass['Sensitivity'] # is also called recall
+  fold_specificity <- fold_cm_svm$byClass['Specificity']
+  fold_precision <- fold_cm_svm$byClass['Precision'] # Precision is also called Positive Predictive Value (PPV)
+  fold_recall <- fold_cm_svm$byClass['Recall']
+  fold_f1 <- fold_cm_svm$byClass['F1']
+  fold_auc<-as.numeric(auc(fold_test$DEATH_EVENT,pre.svm[,2]))
+  flod_mcc<- mccr(fold_test$DEATH_EVENT, p.svm)
+  
+  # append the result to the accuracy list for each fold
+  accuracy_list<- append(accuracy_list,fold_accuracy)
+  sensitivity_list <- append(sensitivity_list,fold_sensitivity)
+  pecificity_list <- append(pecificity_list,fold_specificity)
+  precision_list <- append(precision_list,fold_precision)
+  f1_list <- append(f1_list,fold_f1)
+  auc_list <- append(auc_list,fold_auc)
+  mcc_list <- append(mcc_list,fold_mcc)
+}
+#accuracy_list
+# compute the average accuracy over 10 folds
+svm_accuracy <- mean(accuracy_list)
+svm_sensitivity <- mean(sensitivity_list)
+svm_pecificity <- mean(pecificity_list)
+svm_precision <- mean(precision_list)
+svm_f1 <- mean(f1_list)
+svm_auc<-mean(auc_list)
+svm_mcc<-mean(mcc_list)
+
+#ROC
+p1<-ggroc(list(KNN = knnroc1, GLM = glmroc1,SVM = svmauc1, Randomforest= rfroc1), legacy.axes = TRUE) +
+  annotate(geom = "segment", x= 0, y = 0, xend = 1, yend = 1, color = "darkgrey", linetype=4)+
+  ggtitle("ROC curve after feature selection")+theme_bw()+
+  theme(plot.title = element_text(size=12, hjust = 0.5, face = "bold"), axis.title = element_text(size = 10))+
+  theme(legend.position=c(0.75,0.20))+theme(legend.text=element_text(size=8))
+
+p2<-ggroc(list(KNN = knnroc2, GLM = glmroc2,SVM = svmauc2, Randomforest= rfroc2), legacy.axes = TRUE) +
+  annotate(geom = "segment", x= 0, y = 0, xend = 1, yend = 1, color = "darkgrey", linetype=4)+
+  ggtitle("ROC curve before feature selection")+theme_bw()+
+  theme(plot.title = element_text(size=12, hjust = 0.5, face = "bold"), axis.title = element_text(size = 10))+
+  theme(legend.position=c(0.75,0.20))+theme(legend.text=element_text(size=8))
+#spilt plot
+plot_grid(p2, p1, align = "h")
+plot_grid(p1, p2, ncol = 2)
